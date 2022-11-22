@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @Configuration
 @EnableWebSecurity
 
-public class SecurityConfig {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http)throws Exception{
         http.authorizeRequests().anyRequest().authenticated().and().httpBasic().and().logout();
         http.cors().disable().csrf().disable();

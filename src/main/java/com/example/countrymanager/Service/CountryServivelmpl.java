@@ -39,8 +39,8 @@ public class CountryServivelmpl implements CountryService{
 
     @Override
     public Country deleteById(Long id) {
-        Country c = countryRepository.getOne(id);
-        countryRepository.delete(c);
+        //Country c = countryRepository.getOne(id);
+        countryRepository.delete(id);
         return null;
     }
 

@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 public interface CountryRepository extends JpaRepository<Country,Long> {
+    void delete(Long id);
 }

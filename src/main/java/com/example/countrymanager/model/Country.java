@@ -30,7 +30,7 @@ public class Country {
 
     public Country(){}
 
-    Country(Long idx,String countryname,String nationallanguage,float population,LocalDate dbupdatedate){
+    public Country(Long idx, String countryname, String nationallanguage, float population, LocalDate dbupdatedate){
         this.id=id;
         this.countryname=countryname;
         this.nationallanguage=nationallanguage;
