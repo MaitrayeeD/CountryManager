@@ -2,61 +2,69 @@ package com.example.countrymanager;
 
 
 import com.example.countrymanager.Repository.CountryRepository;
+import com.example.countrymanager.Service.CountryService;
 import com.example.countrymanager.model.Country;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
+@RunWith(SpringRunner.class)
 class CountrymanagerApplicationTests {
-
+private MockMvc mockMvc;
 	@Autowired
+	private CountryService countryService;
+	@MockBean
 	private CountryRepository countryRepository;
 	Country country;
 	@Test
 	void getAllCountry() {
-		List<Country>list=countryRepository.findAll();
-		assertThat(list).size().isGreaterThan(0);
+		when(countryRepository.findAll()).thenReturn(Stream.
+				of(new Country(5L,"Thai","Thai",68f,LocalDate.parse("2022-11-07")),new Country(9L,"India","Hindi",123.5f,LocalDate.parse("2022-11-01"))).collect(Collectors.toList()));
+		assertEquals(2,countryService.getAllCountry().size());
 
 	}
 
 	@Test
 	void getContrybyId() {
-		country=countryRepository.findById(7L).get();
-		assertEquals("China",country.getCountryname());
+		Long id=9L;
+		countryService.getCountrybyId(id);
+		verify(countryRepository,times(1)).findById(9L);
 	}
 
 	@Test
 	void addCountry() {
-		country=new Country();
-		country.setId(7L);
-		country.setCountryname("China");
-		country.setPopulation((float)89.89);
-		country.setNationallanguage("Chinease(mandarin)");
-		country.setDbupdatedate(LocalDate.parse("2022-07-04"));
-		countryRepository.save(country);
-		assertNotNull(countryRepository.findById(7L).get());
+		country=new Country(9L,"India","Hindi",123.5f,LocalDate.parse("2022-11-01"));
+        when(countryRepository.save(country)).thenReturn(country);
+		assertEquals(country,countryService.addCountry(country));
 	}
 
 	@Test
 	void delete() {
-		countryRepository.deleteById(6L);
-		assertThat(countryRepository.existsById(6L)).isFalse();
+	Long id=10L;
+	countryService.deleteById(id);
+	verify(countryRepository,times(1)).delete(id);
 	}
 
 	@Test
 	void updateCountry() {
-		country=countryRepository.findById(6L).get();
-		country.setCountryname("Germany");
-		countryRepository.save(country);
-		assertNotEquals("Spain",countryRepository.findById(6L).get().getCountryname());
+		Long id=9L;
+		country=new Country(9L,"India","Hindi",123.5f,LocalDate.parse("2022-11-01"));
+		when(countryRepository.save(country)).thenReturn(country);
+		assertEquals(country,countryService.updateCountry(id,country));
 	}
 
 
